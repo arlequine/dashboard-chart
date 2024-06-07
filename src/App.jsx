@@ -1,33 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useContext, useEffect, useState } from 'react'
+import { DataContext } from './context/DataContext'
 import './App.css'
+import { Container, Row, Col } from 'react-bootstrap'
+import FilterSelect from './components/Filter/FilterSelect'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [cryptos, setCryptos] = useState()
+  const { getDataCurrency } = useContext(DataContext)
+  const [ currentCrypto, setCurrentCrypto ] = useState(null)
+
+  const getData = async () => {
+    const coins = await getDataCurrency('usd')
+    setCryptos(coins)
+  }
+
+  useEffect(() => {
+    getData()
+  }, [])
+  
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Container>
+        <Row>
+          <Col>
+            <div className="filters" >
+
+              <FilterSelect options={cryptos} setVal={setCurrentCrypto} />
+
+              <FilterSelectDate />
+
+            </div>
+          </Col>
+        </Row>
+        <Row>
+
+        </Row>
+      </Container>
     </>
   )
 }
